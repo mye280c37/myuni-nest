@@ -6,40 +6,40 @@ export class Score {
     @Min(0)
     @Max(100)
     @ApiProperty({example: 87})
-    korean: Number;
+    korean: number;
     @IsNumber()
     @Min(0)
     @Max(100)
     @ApiProperty({example: 87})
-    english: Number;
+    english: number;
     @IsNumber()
     @Min(0)
     @Max(100)
     @ApiProperty({example: 87})
-    math: Number;
+    math: number;
     @IsNumber()
     @Min(0)
     @Max(100)
     @ApiProperty({example: 87})
-    society: Number;
+    society: number;
     @IsNumber()
     @Min(0)
     @Max(100)
     @ApiProperty({example: 87})
-    science: Number;
+    science: number;
     @IsNumber()
     @Min(0)
     @Max(100)
     @ApiProperty({example: 87})
-    history: Number;
+    history: number;
     @IsNumber()
     @Min(0)
     @Max(100)
     @ApiProperty({example: 87})
-    optional: Number;
+    optional: number;
     @IsNumber()
     @Min(0)
     @Max(100)
     @ApiProperty({example: 87})
-    average: Number;
+    average: number;
 }

@@ -22,5 +22,5 @@ export class DesiredUni {
     6: Record<string, any>;
     @IsString()
     @ApiProperty({example: '희망 대학 지원 이유'})
-    reason: String;
+    reason: string;
 }

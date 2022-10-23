@@ -13,14 +13,14 @@ export class ReviewListItemDto {
 
     @IsString()
     @ApiProperty({example: '63258760fd2ed6c49a6b6773'})
-    _id: String;
+    _id: string;
     @IsString()
     @ApiProperty({example: '리뷰 제목'})
-    title: String;
+    title: string;
     @IsString()
     @ApiProperty({example: '작성자 이름'})
-    author: String;
+    author: string;
     @IsString()
     @ApiProperty({example: '2020-09-09T13:30'})
-    consultingTime: String;
+    consultingTime: string;
 }

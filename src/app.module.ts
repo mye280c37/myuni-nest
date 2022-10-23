@@ -3,7 +3,6 @@ import { LoggerMiddleware } from "./common/middleware/logger.middleware";
 import { MongooseModule } from '@nestjs/mongoose';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UserModule } from './user/user.module';
 import { ConsultingModule } from './consulting/consulting.module';
 import { CheckboxFormModule } from './checkbox-form/checkbox-form.module';
 import { ConsultingRequestModule } from './consulting-request/consulting-request.module';
@@ -21,7 +20,6 @@ import mongoose from 'mongoose';
       useNewUrlParser: true,
       useUnifiedTopology: true,
     }),
-    UserModule,
     ConsultingModule, 
     CheckboxFormModule,
     ConsultingRequestModule,

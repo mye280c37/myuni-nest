@@ -10,23 +10,23 @@ export class Review {
     @Prop({required: true})
     @IsString()
     @ApiProperty({example: '작성자'})
-    author: String;
+    author: string;
     @Prop({required: true})
     @IsString()
     @ApiProperty({example: '2020-09-08T14:30'})
-    consultingTime: String;
+    consultingTime: string;
     @Prop({required: true})
     @IsString()
     @ApiProperty({example: '후기 제목'})
-    title: String;
+    title: string;
     @Prop({required: true})
     @IsString()
     @ApiProperty({example: '후기 내용'})
-    body: String;
+    body: string;
     @Prop({required: true})
     @IsString()
     @ApiProperty({example: '1234'})
-    password: String;
+    password: string;
 }
 
 export const ReviewSchema = SchemaFactory.createForClass(Review);

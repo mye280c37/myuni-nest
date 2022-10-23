@@ -1,16 +1,20 @@
 import {Prop, Schema, SchemaFactory} from '@nestjs/mongoose';
-import {Document, ObjectId, SchemaTypes, Types} from 'mongoose';
+import {Document, Types} from 'mongoose';
+import { IsBoolean, IsArray } from "class-validator";
+import { ApiProperty } from "@nestjs/swagger";
 
 export type CheckBoxFormDocument = CheckBoxForm & Document;
 
 @Schema({versionKey: false})
 export class CheckBoxForm {
-    @Prop({ type: SchemaTypes.ObjectId })
-    _id: Types.ObjectId;
+    @IsArray()
     @Prop({ required: true })
-    labels: Types.Array<String>;
+    @ApiProperty({example: ['선택지1', '선택지2', '기타']})
+    labels: Types.Array<string>;
+    @IsBoolean()
     @Prop({ required: true })
-    haveEtc: Boolean;
+    @ApiProperty({example: true})
+    haveEtc: boolean;
 }
 
 export const CheckBoxFormSchema = SchemaFactory.createForClass(CheckBoxForm);

@@ -1,7 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { AvailableDateDto } from './available-date.dto';
 import { AvailableDate } from './available-date.schema';
 
 @Injectable()
@@ -10,13 +9,12 @@ export class AvailableDateService {
         @InjectModel('AvailableDate') private readonly availableDateModel: Model<AvailableDate>
     ){}
 
-    async create(availableDateDto: AvailableDateDto): Promise<AvailableDate> {
-        const newDate = await new this.availableDateModel(availableDateDto);
-        return newDate.save();
+    async create(availableDate: AvailableDate): Promise<AvailableDate> {
+        return await new this.availableDateModel(availableDate).save();
     }
 
-    async update(dateId: string, availableDateDto: AvailableDateDto): Promise<AvailableDate> {
-        const existingDate = await this.availableDateModel.findByIdAndUpdate(dateId, availableDateDto, { new: true });
+    async update(dateId: string, availableDate: AvailableDate): Promise<AvailableDate> {
+        const existingDate = await this.availableDateModel.findByIdAndUpdate(dateId, availableDate, { new: true });
         if (!existingDate) {
             throw new NotFoundException(`Student #${dateId} not found`);
         }

@@ -1,17 +1,17 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsNumber, IsString } from "class-validator";
 
-export class UserDto {
+export class User {
     @IsString()
     @ApiProperty({example: '아무개'})
-    name: String;
+    name: string;
     @IsString()
     @ApiProperty({example: 'm'})
-    sex: String;
+    sex: string;
     @IsNumber()
     @ApiProperty({example: '19'})
-    age: Number;
+    age: number;
     @IsString()
     @ApiProperty({example: '01011112222'})
-    phone: String;
+    phone: string;
 }

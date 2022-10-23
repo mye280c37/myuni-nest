@@ -1,5 +1,6 @@
 import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Put, Res } from '@nestjs/common';
 import { ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Response } from 'express';
 import { Review } from './review.schema';
 import { ReviewService } from './review.service';
 
@@ -11,12 +12,12 @@ export class ReviewController {
     @Post()
     @ApiOperation({ summary: '리뷰 생성 API', description: '리뷰를 생성한다.' })
     @ApiCreatedResponse({ description: '리뷰를 생성한다.', type: String })
-    async create (@Res() response, @Body() reviewDto: Review) {
+    async create (@Res() response: Response, @Body() reviewDto: Review) {
         try {
             const review = await this.reviewService.create(reviewDto);
             return response.status(HttpStatus.CREATED).json({
                 message: 'Review has been created successfully',
-                review,
+                result: review,
             });
         } catch (err) {
             return response.status(HttpStatus.BAD_REQUEST).json({
@@ -29,12 +30,12 @@ export class ReviewController {
 
     @Put('/:id')
     @ApiOperation({ summary: '리뷰 수정 API', description: '리뷰 데이터를 수정한다.' })
-    async update (@Res() response, @Param('id') reviewId: string, @Body() reviewDto: Review) {
+    async update (@Res() response: Response, @Param('id') reviewId: string, @Body() reviewDto: Review) {
         try {
             const review = await this.reviewService.update(reviewId, reviewDto);
             return response.status(HttpStatus.OK).json({
                 message: 'Review has been successfully updated',
-                review,
+                result: review,
             });
         } catch (err) {
             return response.status(err.status).json(err.response);
@@ -43,12 +44,12 @@ export class ReviewController {
 
     @Get()
     @ApiOperation({ summary: '리뷰 리스트 API', description: '모든 리뷰 리스트를 가져온다.' })
-    async getAll (@Res() response) {
+    async getAll (@Res() response: Response) {
         try {
             const reviews = await this.reviewService.getAll();
             return response.status(HttpStatus.OK).json({
                 message: 'All reviews data found successfully',
-                reviews,
+                result: reviews,
             });
         } catch (err) {
             return response.status(err.status).json(err.response);
@@ -62,7 +63,7 @@ export class ReviewController {
             const review = await this.reviewService.get(reviewId);
             return response.status(HttpStatus.OK).json({
                 message: 'Review found successfully',
-                review,
+                result: review,
             });
         } catch (err) {
             return response.status(err.status).json(err.response);
@@ -71,13 +72,13 @@ export class ReviewController {
 
     @Delete('/:id')
     @ApiOperation({ summary: '유저 삭제 API', description: '특정 유저 하나를 삭제한다.' })
-    async delete (@Res() response, @Param('id') reviewId: string)
+    async delete (@Res() response: Response, @Param('id') reviewId: string)
     {
         try {
             const review = await this.reviewService.delete(reviewId);
             return response.status(HttpStatus.OK).json({
                 message: 'Review deleted successfully',
-                review,
+                result: review,
             });
         }catch (err) {
             return response.status(err.status).json(err.response);
