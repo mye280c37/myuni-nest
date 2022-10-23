@@ -8,6 +8,7 @@ export class ReviewListItemDto {
         this._id = review._id;
         this.title = review.title;
         this.author = review.author;
+        this.body = review.body;
         this.consultingTime = review.consultingTime;
     }
 
@@ -20,6 +21,9 @@ export class ReviewListItemDto {
     @IsString()
     @ApiProperty({example: '작성자 이름'})
     author: string;
+    @IsString()
+    @ApiProperty({example: '리뷰 내용'})
+    body: string;
     @IsString()
     @ApiProperty({example: '2020-09-09T13:30'})
     consultingTime: string;
