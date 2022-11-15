@@ -24,7 +24,7 @@ export class ConsultingRequest {
     @Prop({required: true})
     @ApiProperty({example: '2022-09-15 14:00~15:00'})
     desiredDate: string;
-    @IsString()
+    @IsArray()
     @Prop({required: true})
     @ApiProperty({example: ['수시지원', '자기소개서 컨설팅']})
     consultingOption: Array<string>;
