@@ -23,7 +23,7 @@ export class AvailableDateService {
 
     async getAll(): Promise<AvailableDate[]> {
         const availableDates = await this.availableDateModel.find();
-        if (!availableDates || availableDates.length == 0) {
+        if (!availableDates) {
             throw new NotFoundException('AvailableDates data not found!');
         }
         return availableDates;

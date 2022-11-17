@@ -40,7 +40,7 @@ export class ConsultingRequest {
     uni: DesiredUni;
     @IsString()
     @Prop({required: true})
-    @ApiProperty({example: '2022-09-15 14:00~15:00'})
+    @ApiProperty({example: '6374750277ee457415345662'})
     desiredDate: string;
     @IsArray()
     @Prop({required: true})
