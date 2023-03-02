@@ -4,10 +4,11 @@ import { ReviewDocument } from "./review.schema";
 
 export class ReviewListItemDto {
 
-    constructor(review: ReviewDocument) {
+    constructor(review: ReviewDocument, admin: Boolean) {
         this._id = review._id;
         this.title = review.title;
         this.author = review.author;
+        if (!admin) this.author = this.author.slice(0, 1) + '**';
         this.body = review.body;
         this.consultingTime = review.consultingTime;
     }

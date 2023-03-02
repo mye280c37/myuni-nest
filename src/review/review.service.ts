@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { flatten, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { ReviewListItemDto } from './review-list-item.response.dto';
@@ -12,7 +12,7 @@ export class ReviewService {
 
     async create(reviewDto: Review): Promise<ReviewListItemDto> {
         const review = await new this.reviewModel(reviewDto).save();
-        return new ReviewListItemDto(review);
+        return new ReviewListItemDto(review, false);
     }
 
     async update(reviewId: string, reviewDto: Review): Promise<ReviewListItemDto> {
@@ -20,7 +20,7 @@ export class ReviewService {
         if (!existingReview) {
             throw new NotFoundException(`User #${reviewId} not found`);
         }
-        return new ReviewListItemDto(existingReview);
+        return new ReviewListItemDto(existingReview, false);
     }
 
     async getAll(): Promise<ReviewListItemDto[]> {
@@ -28,7 +28,7 @@ export class ReviewService {
         if (!reviews || reviews.length == 0) {
             throw new NotFoundException('Users data not found!');
         }
-        return reviews.map(review => new ReviewListItemDto(review));
+        return reviews.map(review => new ReviewListItemDto(review, false));
     }
 
     async get(reviewId: string): Promise<Review> {
@@ -44,7 +44,7 @@ export class ReviewService {
         if (!deletedReview) {
             throw new NotFoundException(`Review #${reviewId} not found`);
         }   
-        return new ReviewListItemDto(deletedReview);
+        return new ReviewListItemDto(deletedReview, false);
     }
 
 }
