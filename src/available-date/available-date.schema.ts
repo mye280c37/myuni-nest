@@ -9,16 +9,8 @@ export type AvailableDateDocument = AvailableDate & Document;
 export class AvailableDate {
     @IsString()
     @Prop({ required: true })
-    @ApiProperty({example: '2022-09-21'})
-    date: string; // 'YYYY-MM-DD'
-    @IsString()
-    @Prop({ required: true })
-    @ApiProperty({example: '13:00'})
-    timeFrom: string;
-    @IsString()
-    @Prop({ required: true })
-    @ApiProperty({example: '14:00'})
-    timeTo: string;
+    @ApiProperty({example: '2022-09-21 13:00~14:00'})
+    date: string; // 'YYYY-MM-DD;
 }
 
 export const AvailableDateSchema = SchemaFactory.createForClass(AvailableDate);
