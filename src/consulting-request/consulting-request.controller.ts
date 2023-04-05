@@ -9,18 +9,14 @@ import { AvailableDateService } from 'src/available-date/available-date.service'
 @ApiTags('컨설팅 신청 API')
 export class ConsultingRequestController {
     constructor(
-        private readonly consultingRequestService: ConsultingRequestService,
-        private readonly availableDateService: AvailableDateService
+        private readonly consultingRequestService: ConsultingRequestService
     ) {}
 
     @Post()
     @ApiOperation({ summary: '컨설팅 신청 생성 API', description: '컨설팅 신청 데이터를 생성한다.' })
     @ApiCreatedResponse({ description: '컨설팅 신청 데이터를 생성한다.', type: String })
     async create (@Res() response: Response, @Body() request: ConsultingRequest) {
-        let availableDate = null;
         try {
-            availableDate = await this.availableDateService.delete(request.desiredDate);
-            request.desiredDate = availableDate.date + " " + availableDate.timeFrom + "~" + availableDate.timeTo;
             const consultingRequest = await this.consultingRequestService.create(request);
             return response.status(HttpStatus.CREATED).json({
                 message: 'Consulting Request has been created successfully',
@@ -28,13 +24,6 @@ export class ConsultingRequestController {
             });
         } catch (err) {
             console.log(err);
-            if (availableDate === null) {
-                return response.status(HttpStatus.BAD_REQUEST).json({
-                    statusCode: 400,
-                    message: '해당 날짜로 이미 신청이 접수되었습니다. 다른 날짜로 다시 신청해주세요.',
-                    error: 'Unvalid AvailableDate'
-                });
-            }
             return response.status(HttpStatus.BAD_REQUEST).json({
                 statusCode: 400,
                 message: 'Error: Consulting Request not created!',
