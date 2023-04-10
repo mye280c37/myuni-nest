@@ -11,6 +11,8 @@ import { AdditionalInfoModule } from './additional-info/additional-info.module';
 import { AvailableDateModule } from './available-date/available-date.module';
 import { ReviewModule } from './review/review.module';
 import { ScoreConversionModule } from './converter/converter.module';
+import { UserModule } from './user/user.module';
+import { AuthModule } from './auth/auth.module';
 import mongoose from 'mongoose';
 
 @Module({
@@ -26,7 +28,9 @@ import mongoose from 'mongoose';
     AdditionalInfoModule,
     AvailableDateModule,
     ReviewModule,
-    ScoreConversionModule
+    ScoreConversionModule,
+    UserModule,
+    AuthModule
   ],
   controllers: [AppController],
   providers: [AppService],
