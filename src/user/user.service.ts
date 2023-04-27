@@ -3,6 +3,8 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from './user.schema';
 
+import * as bcrypt from 'bcrypt';
+
 @Injectable()
 export class UserService {
     constructor(
@@ -17,7 +19,13 @@ export class UserService {
                 HttpStatus.BAD_REQUEST
             );
         }
-        return await new this.userModel(user).save();
+        //password encryption
+        await new this.userModel({
+            ...user,
+            password : await bcrypt.hash(user.password, 10)
+        }).save();
+        user.password = undefined;
+        return user;
     }
 
     async findOne(email: string): Promise<User> {
