@@ -1,8 +1,10 @@
-import { Body, Controller, Post, HttpCode, HttpStatus, Res } from '@nestjs/common';
+import { Body, Controller, Get, Post, HttpCode, HttpStatus, UseGuards, Req, Res } from '@nestjs/common';
 import { ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { AuthService } from './auth.service';
 import { SignInDto } from './signin.dto';
+import { JwtAuthGuard } from './jwt-auth.guard';
+import RequestWithUser from './requestWithUser.interface';
 
 @Controller('v2/auth')
 @ApiTags('Auth API')
@@ -15,16 +17,35 @@ export class AuthController {
     @Post('login')
     async signIn(@Res() response: Response, @Body() signInDto: SignInDto) {
         try {
-            const accessToken = await this.authService.signIn(signInDto.email, signInDto.password);
+            const cookie = await this.authService.signIn(signInDto.email, signInDto.password);
+            response.setHeader('Set-Cookie', cookie);
 
             return response.status(HttpStatus.ACCEPTED).json({
                 message: 'User has been logined successfully',
                 result: {
-                    accessToken: accessToken
+                    email: signInDto.email
                 },
             });
         }catch(err) {
             return response.status(err.status?err.status:HttpStatus.SERVICE_UNAVAILABLE).json(err.message);
         }
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Post('logout')
+    async logOut(@Req() request: RequestWithUser, @Res() response: Response) {
+        response.setHeader(
+            'Set-Cookie',
+            this.authService.getCookieForLogOut(),
+        );
+        return response.sendStatus(200);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Get()
+    authenticate(@Req() request: RequestWithUser) {
+        const user = request.user;
+        user.password = undefined;
+        return user;
     }
 }

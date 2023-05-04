@@ -4,12 +4,14 @@ import { JwtService } from '@nestjs/jwt';
 import { User } from 'src/user/user.schema';
 
 import * as bcrypt from 'bcrypt';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
     constructor(
         private userService : UserService,
-        private jwtService: JwtService
+        private jwtService: JwtService,
+        private readonly configService: ConfigService
     ){}
 
     private async verifyPassword(plainTextPassword: string, hashedPassword: string) {
@@ -36,16 +38,26 @@ export class AuthService {
         }
     }
 
+    async getCookieWithJwtToken(user: User): Promise<string> {
+        const payload: TokenPayload = { username: user.username, sub: user.email };
+        const token = await this.jwtService.signAsync(payload);
+        return `Authentication=${token}; HttpOnly; Path=/; Max-Age=${this.configService.get('JWT_EXPIRATION_TIME')}`;
+    }
+
     async signIn(email: string, password: string): Promise<string> {
         try{
             const user = await this.validateUser(email, password);
-            const payload = { username: user.username, sub: user.email };
-            return await this.jwtService.signAsync(payload);
+            const cookie = await this.getCookieWithJwtToken(user);
+            return cookie;
         }catch(err) {
             throw new HttpException(
                 '서버 오류가 발생했습니다.',
                 HttpStatus.INTERNAL_SERVER_ERROR
             )
         }
+    }
+
+    public getCookieForLogOut(): string {
+        return `Authentication=; HttpOnly; Path=/; Max-Age=0`;
     }
 }
