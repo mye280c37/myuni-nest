@@ -23,12 +23,12 @@ export class ReviewService {
         return new ReviewListItemDto(existingReview, false);
     }
 
-    async getAll(): Promise<ReviewListItemDto[]> {
+    async getAll(admin=false): Promise<ReviewListItemDto[]> {
         const reviews = await this.reviewModel.find();
         if (!reviews || reviews.length == 0) {
             throw new NotFoundException('Users data not found!');
         }
-        return reviews.map(review => new ReviewListItemDto(review, false));
+        return reviews.map(review => new ReviewListItemDto(review, admin));
     }
 
     async get(reviewId: string): Promise<Review> {
