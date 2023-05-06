@@ -1,11 +1,12 @@
-import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Put, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Put, Res, UseGuards } from '@nestjs/common';
 import { ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AvailableDate } from './available-date.schema';
 import { AvailableDateService } from './available-date.service';
 import { Response } from 'express';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
-
-@Controller('v2/available-date')
+@Controller('v2/available-date/admin')
+@UseGuards(JwtAuthGuard)
 @ApiTags('컨설팅 가능 날짜 API')
 export class AvailableDateController {
     constructor(private readonly availableDateService: AvailableDateService) { }
