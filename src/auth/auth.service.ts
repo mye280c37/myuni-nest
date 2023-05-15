@@ -41,14 +41,20 @@ export class AuthService {
     async getCookieWithJwtToken(user: User): Promise<string> {
         const payload: TokenPayload = { username: user.username, sub: user.email };
         const token = await this.jwtService.signAsync(payload);
-        return `Authentication=${token}; HttpOnly; Path=/; Max-Age=${this.configService.get('JWT_EXPIRATION_TIME')}`;
+        let expiredDate = new Date();
+        expiredDate.setHours(expiredDate.getHours()+2);
+        return `Authentication=${token}; HttpOnly; Path=/; Expires=${expiredDate.toUTCString()};`;
+    }
+
+    async getJwtToken (user: User): Promise<string> {
+        const payload: TokenPayload = { username: user.username, sub: user.email };
+        return await this.jwtService.signAsync(payload);
     }
 
     async signIn(email: string, password: string): Promise<string> {
         try{
             const user = await this.validateUser(email, password);
-            const cookie = await this.getCookieWithJwtToken(user);
-            return cookie;
+            return await this.getCookieWithJwtToken(user);
         }catch(err) {
             throw new HttpException(
                 '서버 오류가 발생했습니다.',
