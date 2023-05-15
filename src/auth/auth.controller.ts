@@ -20,7 +20,7 @@ export class AuthController {
             const cookie = await this.authService.signIn(signInDto.email, signInDto.password);
             response.setHeader('Set-Cookie', cookie);
 
-            return response.status(HttpStatus.ACCEPTED).json({
+            return response.status(HttpStatus.OK).json({
                 message: 'User has been logined successfully',
                 result: {
                     email: signInDto.email
