@@ -43,7 +43,8 @@ export class AuthService {
         const token = await this.jwtService.signAsync(payload);
         let expiredDate = new Date();
         expiredDate.setHours(expiredDate.getHours()+2);
-        return `Authentication=${token}; HttpOnly; Path=/; Expires=${expiredDate.toUTCString()};`;
+        // return `Authentication=${token}; HttpOnly; Path=/; Expires=${expiredDate.toUTCString()};`;
+        return `Authentication=${token}; Path=/; Expires=${expiredDate.toUTCString()};`;
     }
 
     async getJwtToken (user: User): Promise<string> {
