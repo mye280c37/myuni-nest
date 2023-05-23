@@ -88,7 +88,7 @@ export class ReviewController {
     }
 
     @UseGuards(JwtAuthGuard)
-    @Get('/admin')
+    @Post('/admin')
     @ApiOperation({ summary: '관리자 리뷰 리스트 API', description: '모든 리뷰 리스트를 보안없이 가져온다.' })
     async getAllAdmin(@Res() response: Response) {
         try {
