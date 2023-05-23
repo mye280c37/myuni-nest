@@ -3,6 +3,7 @@ import { ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { Review } from './review.schema';
 import { ReviewService } from './review.service';
+import { getReivewResponseDto } from './review-list-item.response.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('v2/review')
@@ -18,7 +19,7 @@ export class ReviewController {
             const review = await this.reviewService.create(reviewDto);
             return response.status(HttpStatus.CREATED).json({
                 message: 'Review has been created successfully',
-                result: review,
+                result: getReivewResponseDto(review, false),
             });
         } catch (err) {
             return response.status(HttpStatus.BAD_REQUEST).json({
@@ -36,7 +37,7 @@ export class ReviewController {
             const review = await this.reviewService.update(reviewId, reviewDto);
             return response.status(HttpStatus.OK).json({
                 message: 'Review has been successfully updated',
-                result: review,
+                result: getReivewResponseDto(review, false),
             });
         } catch (err) {
             return response.status(err.status).json(err.response);
@@ -50,22 +51,7 @@ export class ReviewController {
             const reviews = await this.reviewService.getAll();
             return response.status(HttpStatus.OK).json({
                 message: 'All reviews data found successfully',
-                result: reviews,
-            });
-        } catch (err) {
-            return response.status(err.status).json(err.response);
-        }
-    }
-
-    @UseGuards(JwtAuthGuard)
-    @Get('/admin')
-    @ApiOperation({ summary: '관리자 리뷰 리스트 API', description: '모든 리뷰 리스트를 보안없이 가져온다.' })
-    async getAllAdmin(@Res() response: Response) {
-        try {
-            const reviews = await this.reviewService.getAll(true);
-            return response.status(HttpStatus.OK).json({
-                message: 'All reviews data found successfully',
-                result: reviews,
+                result: reviews.map(review => getReivewResponseDto(review, false)),
             });
         } catch (err) {
             return response.status(err.status).json(err.response);
@@ -79,7 +65,7 @@ export class ReviewController {
             const review = await this.reviewService.get(reviewId);
             return response.status(HttpStatus.OK).json({
                 message: 'Review found successfully',
-                result: review,
+                result: getReivewResponseDto(review, false),
             });
         } catch (err) {
             return response.status(err.status).json(err.response);
@@ -91,12 +77,27 @@ export class ReviewController {
     async delete (@Res() response: Response, @Param('id') reviewId: string)
     {
         try {
-            const review = await this.reviewService.delete(reviewId);
+            await this.reviewService.delete(reviewId);
             return response.status(HttpStatus.OK).json({
-                message: 'Review deleted successfully',
-                result: review,
+                message: 'Review deleted successfully'
             });
         }catch (err) {
+            return response.status(err.status).json(err.response);
+        }
+
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Get('/admin')
+    @ApiOperation({ summary: '관리자 리뷰 리스트 API', description: '모든 리뷰 리스트를 보안없이 가져온다.' })
+    async getAllAdmin(@Res() response: Response) {
+        try {
+            const reviews = await this.reviewService.getAll();
+            return response.status(HttpStatus.OK).json({
+                message: 'All reviews data found successfully',
+                result: reviews.map(review => getReivewResponseDto(review, true)),
+            });
+        } catch (err) {
             return response.status(err.status).json(err.response);
         }
     }
@@ -107,10 +108,9 @@ export class ReviewController {
     async deleteAdmin (@Res() response: Response, @Param('id') reviewId: string)
     {
         try {
-            const review = await this.reviewService.delete(reviewId);
+            await this.reviewService.delete(reviewId);
             return response.status(HttpStatus.OK).json({
-                message: 'Review deleted successfully',
-                result: review,
+                message: 'Review deleted successfully'
             });
         }catch (err) {
             return response.status(err.status).json(err.response);

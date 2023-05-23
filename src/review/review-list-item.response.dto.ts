@@ -1,31 +1,8 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { IsString } from "class-validator";
-import { ReviewDocument } from "./review.schema";
+import { Review } from "./review.schema";
 
-export class ReviewListItemDto {
+export const getReivewResponseDto = (review: Review, admin: Boolean): Review => {
+    review.password = undefined;
+    if(!admin) review.author = review.author.slice(0, 1) + '**';
 
-    constructor(review: ReviewDocument, admin: Boolean) {
-        this._id = review._id;
-        this.title = review.title;
-        this.author = review.author;
-        if (!admin) this.author = this.author.slice(0, 1) + '**';
-        this.body = review.body;
-        this.consultingTime = review.consultingTime;
-    }
-
-    @IsString()
-    @ApiProperty({example: '63258760fd2ed6c49a6b6773'})
-    _id: string;
-    @IsString()
-    @ApiProperty({example: '리뷰 제목'})
-    title: string;
-    @IsString()
-    @ApiProperty({example: '작성자 이름'})
-    author: string;
-    @IsString()
-    @ApiProperty({example: '리뷰 내용'})
-    body: string;
-    @IsString()
-    @ApiProperty({example: '2020-09-09T13:30'})
-    consultingTime: string;
-}
+    return review;
+};

@@ -1,7 +1,6 @@
-import { flatten, Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { ReviewListItemDto } from './review-list-item.response.dto';
 import { Review } from './review.schema';
 
 @Injectable()
@@ -10,41 +9,39 @@ export class ReviewService {
         @InjectModel('Review') private readonly reviewModel: Model<Review>
     ){}
 
-    async create(reviewDto: Review): Promise<ReviewListItemDto> {
-        const review = await new this.reviewModel(reviewDto).save();
-        return new ReviewListItemDto(review, false);
+    async create(reviewDto: Review): Promise<Review> {
+        return await new this.reviewModel(reviewDto).save();
     }
 
-    async update(reviewId: string, reviewDto: Review): Promise<ReviewListItemDto> {
-        const existingReview = await this.reviewModel.findByIdAndUpdate(reviewId, reviewDto, { new: true });
-        if (!existingReview) {
+    async update(reviewId: string, reviewDto: Review): Promise<Review> {
+        const review = await this.reviewModel.findByIdAndUpdate(reviewId, reviewDto, { new: true });
+        if (!review) {
             throw new NotFoundException(`User #${reviewId} not found`);
         }
-        return new ReviewListItemDto(existingReview, false);
+        return review;
     }
 
-    async getAll(admin=false): Promise<ReviewListItemDto[]> {
+    async getAll(): Promise<Review[]> {
         const reviews = await this.reviewModel.find();
-        if (!reviews || reviews.length == 0) {
+        if (!reviews) {
             throw new NotFoundException('Users data not found!');
         }
-        return reviews.map(review => new ReviewListItemDto(review, admin));
+        return reviews;
     }
 
     async get(reviewId: string): Promise<Review> {
-        const existingReview = await this.reviewModel.findById(reviewId).exec();
-        if (!existingReview) {
+        const review = await this.reviewModel.findById(reviewId).exec();
+        if (!review) {
             throw new NotFoundException(`Review #${reviewId} not found`);
         }
-        return existingReview;
+        return review;
     }
 
-    async delete(reviewId: string): Promise<ReviewListItemDto> {
-        const deletedReview = await this.reviewModel.findByIdAndDelete(reviewId);
-        if (!deletedReview) {
+    async delete(reviewId: string): Promise<void> {
+        const review = await this.reviewModel.findByIdAndDelete(reviewId);
+        if (!review) {
             throw new NotFoundException(`Review #${reviewId} not found`);
-        }   
-        return new ReviewListItemDto(deletedReview, false);
+        }
     }
 
 }
