@@ -5,13 +5,13 @@ import { AvailableDateService } from './available-date.service';
 import { Response } from 'express';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
-@Controller('v2/available-date/admin')
-@UseGuards(JwtAuthGuard)
+@Controller('v2/available-date')
 @ApiTags('컨설팅 가능 날짜 API')
 export class AvailableDateController {
     constructor(private readonly availableDateService: AvailableDateService) { }
 
-    @Post()
+    @UseGuards(JwtAuthGuard)
+    @Post('/admin')
     @ApiOperation({ summary: '신청 가능 날짜 생성 API', description: '컨설팅 신청 가능 날짜를 생성한다.' })
     @ApiCreatedResponse({ description: '신청 가능 날짜를 생성한다.', type: String })
     async create (@Res() response: Response, @Body() availableDateDto: AvailableDate) {
@@ -44,7 +44,8 @@ export class AvailableDateController {
         }
     }
 
-    @Get()
+    @UseGuards(JwtAuthGuard)
+    @Get('/admin')
     @ApiOperation({ summary: '신청 가능 날짜 리스트 API', description: '신청 가능 날짜 리스트를 가져온다.' })
     async getAll (@Res() response: Response) {
         try {
@@ -72,7 +73,8 @@ export class AvailableDateController {
         }
     }
 
-    @Delete('/:id')
+    @UseGuards(JwtAuthGuard)
+    @Delete('/admin/:id')
     @ApiOperation({ summary: '신청 가능 날짜 삭제 API', description: '특정 신청 가능 날짜 하나를 삭제한다.' })
     async delete (@Res() response: Response, @Param('id') dateId: string)
     {
