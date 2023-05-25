@@ -1,9 +1,10 @@
-import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Put, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Put, Res, UseGuards } from '@nestjs/common';
 import { ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ConsultingRequestService } from './consulting-request.service';
 import { Response } from 'express';
 import { ConsultingRequest } from './schemas/consulting-request.schema';
 import { AvailableDateService } from 'src/available-date/available-date.service';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('v2/consulting-request')
 @ApiTags('컨설팅 신청 API')
@@ -46,6 +47,7 @@ export class ConsultingRequestController {
         }
     }
 
+    @UseGuards(JwtAuthGuard)
     @Get()
     @ApiOperation({ summary: '컨설팅 신청 리스트 API', description: '모든 컨설팅 신청 리스트를 가져온다.' })
     async getAll (@Res() response: Response) {
@@ -60,6 +62,7 @@ export class ConsultingRequestController {
         }
     }
 
+    @UseGuards(JwtAuthGuard)
     @Get('/:id')
     @ApiOperation({ summary: '컨설팅 신청 GET API', description: '특정 컨설팅 신청 데이터 하나를 가져온다.' })
     async get (@Res() response: Response, @Param('id') requestId: string) {
@@ -74,6 +77,7 @@ export class ConsultingRequestController {
         }
     }
 
+    @UseGuards(JwtAuthGuard)
     @Delete('/:id')
     @ApiOperation({ summary: '컨설팅 신청 데이터 삭제 API', description: '특정 컨설팅 신청 데이터 하나를 삭제한다.' })
     async delete (@Res() response: Response, @Param('id') uniId: string)
