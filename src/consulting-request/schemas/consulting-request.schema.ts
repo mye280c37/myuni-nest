@@ -9,7 +9,7 @@ import { DesiredUni } from './desired-uni.schema';
 
 export type ConsultingRequestDocument = ConsultingRequest & Document;
 
-@Schema({versionKey: false})
+@Schema({versionKey: false, timestamps: true})
 export class ConsultingRequest {
     @IsObject()
     @Prop({ required: true })
@@ -70,6 +70,8 @@ export class ConsultingRequest {
     @Prop({ required: true })
     @ApiProperty({example: '1002-857-123456 00은행 아무개'})
     refundAccount: string;
+    @Prop({ default: false })
+    checked: boolean;
 }
 
 export const ConsultingRequestSchema = SchemaFactory.createForClass(ConsultingRequest);
