@@ -33,7 +33,8 @@ export class ConsultingRequestController {
         }
     }
 
-    @Put('/:id')
+    @UseGuards(JwtAuthGuard)
+    @Put('/admin/:id')
     @ApiOperation({ summary: '컨설팅 신청 수정 API', description: '컨설팅 신청 데이터를 수정한다.' })
     async update (@Res() response: Response, @Param('id') requestId: string, @Body() request: ConsultingRequest) {
         try {
@@ -48,7 +49,7 @@ export class ConsultingRequestController {
     }
 
     @UseGuards(JwtAuthGuard)
-    @Get()
+    @Get('/admin')
     @ApiOperation({ summary: '컨설팅 신청 리스트 API', description: '모든 컨설팅 신청 리스트를 가져온다.' })
     async getAll (@Res() response: Response) {
         try {
@@ -63,7 +64,7 @@ export class ConsultingRequestController {
     }
 
     @UseGuards(JwtAuthGuard)
-    @Get('/:id')
+    @Get('/admin/:id')
     @ApiOperation({ summary: '컨설팅 신청 GET API', description: '특정 컨설팅 신청 데이터 하나를 가져온다.' })
     async get (@Res() response: Response, @Param('id') requestId: string) {
         try {
@@ -78,7 +79,7 @@ export class ConsultingRequestController {
     }
 
     @UseGuards(JwtAuthGuard)
-    @Delete('/:id')
+    @Delete('/admin/:id')
     @ApiOperation({ summary: '컨설팅 신청 데이터 삭제 API', description: '특정 컨설팅 신청 데이터 하나를 삭제한다.' })
     async delete (@Res() response: Response, @Param('id') uniId: string)
     {

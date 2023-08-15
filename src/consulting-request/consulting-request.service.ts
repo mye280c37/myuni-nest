@@ -23,9 +23,6 @@ export class ConsultingRequestService {
 
     async getAll(): Promise<ConsultingRequest[]> {
         const requests = await this.consultingRequestModel.find();
-        if (!requests || requests.length == 0) {
-            throw new NotFoundException('Consulting Requests data not found!');
-        }
         return requests;
     }
 
