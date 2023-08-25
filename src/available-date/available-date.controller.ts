@@ -45,8 +45,7 @@ export class AvailableDateController {
         }
     }
 
-    @UseGuards(JwtAuthGuard)
-    @Get('/admin')
+    @Get()
     @ApiOperation({ summary: '신청 가능 날짜 리스트 API', description: '신청 가능 날짜 리스트를 가져온다.' })
     async getAll (@Res() response: Response) {
         try {
