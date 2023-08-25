@@ -1,7 +1,7 @@
 import {Prop, Schema, SchemaFactory} from '@nestjs/mongoose';
-import {Document, ObjectId, SchemaTypes, Types} from 'mongoose';
+import { Document } from 'mongoose';
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNumber, IsString, IsObject, IsArray } from "class-validator";
+import { IsString, IsObject, IsArray } from "class-validator";
 import { Score } from './score.schema';
 import { User } from './user.schema';
 import { AdditionalInfoForm } from './additional-info-form.schema';
@@ -9,7 +9,7 @@ import { DesiredUni } from './desired-uni.schema';
 
 export type ConsultingRequestDocument = ConsultingRequest & Document;
 
-@Schema({versionKey: false})
+@Schema({versionKey: false, timestamps: true})
 export class ConsultingRequest {
     @IsObject()
     @Prop({ required: true })
@@ -59,9 +59,8 @@ export class ConsultingRequest {
     @ApiProperty({example: '참고사항'})
     reference: string;
     @IsArray()
-    @Prop({required: true})
     @ApiProperty({type: Array<AdditionalInfoForm>, example: [{header: '2023 수능 응시자 필수 답변', title: '모의고사 등급을 작성해주세요.', value: '국어 1 영어 1 수학 1 한국사 1 사탐(세계지리 1 사회문화 1) 아랍어 1'}]})
-    additionalInfo: AdditionalInfoForm;
+    additionalInfo: Array<AdditionalInfoForm>;
     @IsArray()
     @Prop({required: true})
     @ApiProperty({example: ['센터 대학입시 설명회']})
@@ -70,6 +69,8 @@ export class ConsultingRequest {
     @Prop({ required: true })
     @ApiProperty({example: '1002-857-123456 00은행 아무개'})
     refundAccount: string;
+    @Prop({ default: false })
+    checked: boolean;
 }
 
 export const ConsultingRequestSchema = SchemaFactory.createForClass(ConsultingRequest);
