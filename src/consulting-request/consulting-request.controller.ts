@@ -1,9 +1,9 @@
-import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Put, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Put, Res, UseGuards } from '@nestjs/common';
 import { ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ConsultingRequestService } from './consulting-request.service';
 import { Response } from 'express';
 import { ConsultingRequest } from './schemas/consulting-request.schema';
-import { AvailableDateService } from 'src/available-date/available-date.service';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('v2/consulting-request')
 @ApiTags('컨설팅 신청 API')
@@ -32,11 +32,12 @@ export class ConsultingRequestController {
         }
     }
 
-    @Put('/:id')
+    @UseGuards(JwtAuthGuard)
+    @Put('/admin/:id')
     @ApiOperation({ summary: '컨설팅 신청 수정 API', description: '컨설팅 신청 데이터를 수정한다.' })
-    async update (@Res() response: Response, @Param('id') requestId: string, @Body() request: ConsultingRequest) {
+    async update (@Res() response: Response, @Param('id') requestId: string) {
         try {
-            const consultingRequest = await this.consultingRequestService.update(requestId, request);
+            const consultingRequest = await this.consultingRequestService.update(requestId);
             return response.status(HttpStatus.OK).json({
                 message: 'Consulting Request has been successfully updated',
                 result: consultingRequest,
@@ -46,7 +47,8 @@ export class ConsultingRequestController {
         }
     }
 
-    @Get()
+    @UseGuards(JwtAuthGuard)
+    @Get('/admin')
     @ApiOperation({ summary: '컨설팅 신청 리스트 API', description: '모든 컨설팅 신청 리스트를 가져온다.' })
     async getAll (@Res() response: Response) {
         try {
@@ -60,7 +62,8 @@ export class ConsultingRequestController {
         }
     }
 
-    @Get('/:id')
+    @UseGuards(JwtAuthGuard)
+    @Get('/admin/:id')
     @ApiOperation({ summary: '컨설팅 신청 GET API', description: '특정 컨설팅 신청 데이터 하나를 가져온다.' })
     async get (@Res() response: Response, @Param('id') requestId: string) {
         try {
@@ -74,7 +77,8 @@ export class ConsultingRequestController {
         }
     }
 
-    @Delete('/:id')
+    @UseGuards(JwtAuthGuard)
+    @Delete('/admin/:id')
     @ApiOperation({ summary: '컨설팅 신청 데이터 삭제 API', description: '특정 컨설팅 신청 데이터 하나를 삭제한다.' })
     async delete (@Res() response: Response, @Param('id') uniId: string)
     {

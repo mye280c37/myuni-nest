@@ -4,6 +4,7 @@ import { AvailableDate } from './available-date.schema';
 import { AvailableDateService } from './available-date.service';
 import { Response } from 'express';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { AvailableDateRequestDto } from './available-date.request.dto';
 
 @Controller('v2/available-date')
 @ApiTags('컨설팅 가능 날짜 API')
@@ -14,12 +15,12 @@ export class AvailableDateController {
     @Post('/admin')
     @ApiOperation({ summary: '신청 가능 날짜 생성 API', description: '컨설팅 신청 가능 날짜를 생성한다.' })
     @ApiCreatedResponse({ description: '신청 가능 날짜를 생성한다.', type: String })
-    async create (@Res() response: Response, @Body() availableDateDto: AvailableDate) {
+    async create (@Res() response: Response, @Body() availableDateDto: AvailableDateRequestDto) {
         try {
-            const newDate = await this.availableDateService.create(availableDateDto);
+            const newDateList = availableDateDto.dateList.map(async availableDate => {return await this.availableDateService.create(new AvailableDate(availableDate))});
             return response.status(HttpStatus.CREATED).json({
                 message: 'Date has been created successfully',
-                result: newDate,
+                result: newDateList,
             });
         } catch (err) {
             return response.status(HttpStatus.BAD_REQUEST).json({
@@ -44,8 +45,7 @@ export class AvailableDateController {
         }
     }
 
-    @UseGuards(JwtAuthGuard)
-    @Get('/admin')
+    @Get()
     @ApiOperation({ summary: '신청 가능 날짜 리스트 API', description: '신청 가능 날짜 리스트를 가져온다.' })
     async getAll (@Res() response: Response) {
         try {

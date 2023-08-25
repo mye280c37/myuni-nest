@@ -7,6 +7,11 @@ export type AvailableDateDocument = AvailableDate & Document;
 
 @Schema({versionKey: false})
 export class AvailableDate {
+
+    constructor(date: string){
+        this.date = date;
+    }
+
     @IsString()
     @Prop({ required: true })
     @ApiProperty({example: '2022-09-21 13:00~14:00'})
