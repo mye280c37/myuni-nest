@@ -13,12 +13,14 @@ export class ConsultingRequestService {
         return await new this.consultingRequestModel(consultingRequest).save();
     }
     
-    async update(requestId: string, consultingRequest: ConsultingRequest): Promise<ConsultingRequest> {
-        const existingRequest = await this.consultingRequestModel.findByIdAndUpdate(requestId, consultingRequest, { new: true });
-        if (!existingRequest) {
-            throw new NotFoundException(`Score #${requestId} not found`);
+    async update(requestId: string): Promise<ConsultingRequest> {
+        const existingRequest = await this.get(requestId);
+        if (existingRequest.checked) {
+            await this.consultingRequestModel.updateOne({_id: requestId}, {"$set": {"checked": false}});
+        } else {
+            await this.consultingRequestModel.updateOne({_id: requestId}, {"$set": {"checked": true}});
         }
-        return existingRequest;
+        return await this.get(requestId);
     }
 
     async getAll(): Promise<ConsultingRequest[]> {

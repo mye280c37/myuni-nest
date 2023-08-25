@@ -3,7 +3,6 @@ import { ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ConsultingRequestService } from './consulting-request.service';
 import { Response } from 'express';
 import { ConsultingRequest } from './schemas/consulting-request.schema';
-import { AvailableDateService } from 'src/available-date/available-date.service';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('v2/consulting-request')
@@ -36,9 +35,9 @@ export class ConsultingRequestController {
     @UseGuards(JwtAuthGuard)
     @Put('/admin/:id')
     @ApiOperation({ summary: '컨설팅 신청 수정 API', description: '컨설팅 신청 데이터를 수정한다.' })
-    async update (@Res() response: Response, @Param('id') requestId: string, @Body() request: ConsultingRequest) {
+    async update (@Res() response: Response, @Param('id') requestId: string) {
         try {
-            const consultingRequest = await this.consultingRequestService.update(requestId, request);
+            const consultingRequest = await this.consultingRequestService.update(requestId);
             return response.status(HttpStatus.OK).json({
                 message: 'Consulting Request has been successfully updated',
                 result: consultingRequest,
