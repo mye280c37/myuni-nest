@@ -12,7 +12,7 @@ async function bootstrap() {
     origin: [
       "http://localhost:3000",
       "http://127.0.0.1",
-      "https://www.hellomyuni.com/",
+      "https://www.hellomyuni.com",
     ],
     credentials: true,
     exposedHeaders: ["set-cookie"],
